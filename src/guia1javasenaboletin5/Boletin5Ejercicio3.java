@@ -16,14 +16,12 @@ public class Boletin5Ejercicio3 {
         System.out.println("3.Crear y cargar dos matrices de tamaño 3x3, sumarlas y mostrar su suma. \n");
     
         int tamañoMatriz = 3;
-        int[][] matriz1 = new int[tamañoMatriz][tamañoMatriz];
-        int[][] matriz2 = new int[tamañoMatriz][tamañoMatriz];
-        
+       
         System.out.println("Escriba la primera matriz ");
-        matriz1 = obtenerMatrizCuadrada(tamañoMatriz);
+        int[][] matriz1 = obtenerMatrizCuadrada(tamañoMatriz);
         
         System.out.println("\nEscriba la segunda matriz ");
-        matriz2 = obtenerMatrizCuadrada(tamañoMatriz);
+        int[][] matriz2 = obtenerMatrizCuadrada(tamañoMatriz);
         
         System.out.println("\n");
         System.out.println("La primera matriz es : ");
@@ -45,10 +43,10 @@ public class Boletin5Ejercicio3 {
         StringBuilder armarStringMatriz = new StringBuilder();
         String separador = " | ";
         
-        for(int i=0 ; i<matriz.length ; i++){
+        for (int[] vector : matriz) {
             armarStringMatriz.append(separador);
-            for(int j=0 ; j<matriz.length ; j++){
-                armarStringMatriz.append(matriz[i][j]).append(separador);
+            for (int valorMatriz : vector) {
+                armarStringMatriz.append(valorMatriz).append(separador);
             }
             armarStringMatriz.append("\n");
         }
@@ -81,7 +79,7 @@ public class Boletin5Ejercicio3 {
         
         if(matriz1.length == matriz2.length && matriz1[0].length == matriz2[0].length ){
             for(int i=0 ; i<matriz1.length ; i++){
-                for(int j=0 ; j<matriz1.length ; j++){
+                for(int j=0 ; j<matriz1[0].length ; j++){
                     matrizSuma[i][j] = matriz1[i][j] + matriz2[i][j];
             }
         }
