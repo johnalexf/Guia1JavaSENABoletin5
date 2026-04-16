@@ -26,8 +26,8 @@ public class Boletin5Ejercicio6 {
         
         for(int i=0 ; i<tamaño; i++){
             for(int j=0 ; j<tamaño; j++){
-                sumaCol[i] += tabla[i][j];
-                sumaFil[j] += tabla[i][j];
+                sumaFil[i] += tabla[i][j];
+                sumaCol[j] += tabla[i][j];
             }
         }
         
