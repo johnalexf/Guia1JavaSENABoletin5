@@ -5,6 +5,8 @@
  */
 package guia1javasenaboletin5;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author JOHN FORERO
@@ -40,6 +42,9 @@ public class Boletin5Ejercicio11 {
     private static int limiteNumDorsal;
     
     private static StringBuilder listaInfoAtletasCompleta = new StringBuilder();
+    private static int[][] ordenMarcas;
+    private static StringBuilder[] listasInfoMarcasAtletas;
+    
     
     public static void inicializarVariables( int numAtletas, String[] listaAñoMarcas, int defNumLimDorsal ){
         
@@ -47,7 +52,8 @@ public class Boletin5Ejercicio11 {
         nombreAtleta = new String[cantidadAtletas];
         numeroDorsal = new int[cantidadAtletas];
         
-        marcas = new int[cantidadAtletas][listaAñoMarcas.length];
+        int cantidadMarcas = listaAñoMarcas.length;
+        marcas = new int[cantidadAtletas][cantidadMarcas];
         añoMarcas = listaAñoMarcas;
         /*La posiciones de las mejores marcas se manejaran asi:
             indice 0 = mejor marca del año listaAñoMarcas[0]
@@ -58,6 +64,11 @@ public class Boletin5Ejercicio11 {
         cantidadAtletasGuardados = 0;
         limiteNumDorsal = defNumLimDorsal; 
         
+        ordenMarcas = new int[cantidadMarcas][cantidadAtletas];
+        listasInfoMarcasAtletas = new StringBuilder[cantidadMarcas];
+        for (int i = 0; i < listasInfoMarcasAtletas.length; i++) {
+            listasInfoMarcasAtletas[i] = new StringBuilder();
+        }
     }
     
     
@@ -99,6 +110,7 @@ public class Boletin5Ejercicio11 {
             cantidadAtletasGuardados++;
             
             actualizarListaInfoAtletasCompleta();
+            actualizarPosicionesMarcas();
         }else{
             System.out.printf("Ha llegado al limite de %d atletas \n", cantidadAtletas);
         }
@@ -189,6 +201,79 @@ public class Boletin5Ejercicio11 {
     }
     
     
+    public static void actualizarPosicionesMarcas(){
+        
+        
+        int posicionAtleta;
+        int ultimoAtletaGuardado = cantidadAtletasGuardados-1;
+        
+        for(int marca=0 ; marca < añoMarcas.length ; marca++){
+            int reajustePosicion=-1;
+            if(ultimoAtletaGuardado != 0){
+                for(int i=0; i< cantidadAtletasGuardados-1; i++){
+                    posicionAtleta = ordenMarcas[marca][i];
+                    if( marcas[ultimoAtletaGuardado][marca] > marcas[posicionAtleta][marca] ){
+                        reajustePosicion = i;
+                        break;
+                    }
+                }
+            }
+            
+            if(reajustePosicion == -1){
+                ordenMarcas[marca][ultimoAtletaGuardado] = ultimoAtletaGuardado;
+                actualizarListaInfoMarcaAtletas(marca, false);
+            }else{
+                for(int i=ultimoAtletaGuardado ; i>reajustePosicion; i--){
+                    ordenMarcas[marca][i] = ordenMarcas[marca][i-1];
+                }
+                ordenMarcas[marca][reajustePosicion] = ultimoAtletaGuardado;
+                actualizarListaInfoMarcaAtletas(marca, true);
+            } 
+        }        
+
+    }
+    
+    
+    
+    public static void actualizarListaInfoMarcaAtletas(int marca, boolean crearDesdeCero) {
+        
+        
+        if(crearDesdeCero){
+            listasInfoMarcasAtletas[marca].setLength(0);
+            for(int i=0 ; i< cantidadAtletasGuardados ; i++){
+                armarListaInfoMarcaAtletas(marca, ordenMarcas[marca][i]);
+            }
+        }else{
+                armarListaInfoMarcaAtletas(marca, cantidadAtletasGuardados-1 );
+        }
+        
+    }
+    
+    
+    public static void armarListaInfoMarcaAtletas(int marca, int posicionAtleta){
+         // Formateamos el dorsal a 4 dígitos como querías antes
+        String dorsalFormateado = String.format("%04d", numeroDorsal[posicionAtleta]);
+        
+        listasInfoMarcasAtletas[marca].append("\n-------------------------------------")
+                                .append("\nNumero Dorsal     : ").append(dorsalFormateado)
+                                .append("\nNombre del Atleta : ").append(nombreAtleta[posicionAtleta])
+                                .append("\nMejor marca       : ").append(marcas[posicionAtleta][marca]);
+    
+    }
+    
+    
+    public static void mostrarMarcaAtletasOrdenadas(int marca){
+    
+        System.out.println("\n-----------------------------------------");
+        System.out.println("-----------------------------------------");
+        System.out.printf("%n    Lista de marcas del año %s ordenadas  ", añoMarcas[marca]);
+        System.out.println(listasInfoMarcasAtletas[marca]);
+        System.out.println("-----------------------------------------");
+        System.out.println("-----------------------------------------\n");
+    }
+    
+    
+    
     
     
     
@@ -218,6 +303,7 @@ public class Boletin5Ejercicio11 {
                     break;
                 
                 case 3:
+                    mostrarMarcaAtletasOrdenadas(2);
                     break;
                 
                 case 4:
