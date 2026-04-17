@@ -39,6 +39,8 @@ public class Boletin5Ejercicio11 {
     private static int cantidadAtletasGuardados;
     private static int limiteNumDorsal;
     
+    private static StringBuilder listaInfoAtletasCompleta = new StringBuilder();
+    
     public static void inicializarVariables( int numAtletas, String[] listaAñoMarcas, int defNumLimDorsal ){
         
         cantidadAtletas = numAtletas;
@@ -84,34 +86,36 @@ public class Boletin5Ejercicio11 {
     //Fin de Variables y funcion para estructurar el menu de opciones
    
     
+    
+    
     public static void agregarAtleta(){
     
         if(hayCupoDisponible()){
             
             System.out.printf("%nA continuacion va escribir la informacion del atleta #%d %n", cantidadAtletasGuardados + 1 );
-            
             nombreAtleta[cantidadAtletasGuardados] = capturarNombre();
-
-            numeroDorsal[cantidadAtletasGuardados] = capturarNumeroDorsal();
-            
+            numeroDorsal[cantidadAtletasGuardados] = capturarNumeroDorsal();  
             capturarMarcas();
-
             cantidadAtletasGuardados++;
-
+            
+            actualizarListaInfoAtletasCompleta();
         }else{
             System.out.printf("Ha llegado al limite de %d atletas \n", cantidadAtletas);
         }
     
     }
     
+    
     public static boolean hayCupoDisponible(){
         return cantidadAtletasGuardados < cantidadAtletas;
     }
+    
     
     public static String capturarNombre(){
         System.out.printf("Nombre del atleta : ");
         return Entrada.texto();
     }
+    
     
     public static int capturarNumeroDorsal(){
         int numero;
@@ -133,10 +137,10 @@ public class Boletin5Ejercicio11 {
                 
                 if(isNumRepetido) mostrarError("Numero Dorsal repetido, verifica y escribelo nuevamente");
                 else return numero;           
-            } 
-            
+            }   
         }
     }
+    
     
     public static void capturarMarcas(){
         System.out.println("");
@@ -146,11 +150,45 @@ public class Boletin5Ejercicio11 {
         }
     }
     
+    
+    
     public static void mostrarError(String error) {
-        System.out.println("\n-----------------------------------------");
+        System.out.println("\n----------------------------------------------------------------------------------");
         System.out.println("Error: "+ error);
+        System.out.println("----------------------------------------------------------------------------------\n");
+    }
+    
+    
+    
+    public static void actualizarListaInfoAtletasCompleta() {
+        
+        // Formateamos el dorsal para que siempre tenga 4 dígitos con ceros a la izquierda
+        String dorsalFormateado = String.format("%04d", numeroDorsal[cantidadAtletasGuardados-1]);
+        
+        listaInfoAtletasCompleta.append("\n-------------------------------------")
+                                .append("\nNumero Dorsal              : ").append(dorsalFormateado)
+                                .append("\nNombre del Atleta          : ").append(nombreAtleta[cantidadAtletasGuardados-1])
+                                .append("\nMejores marcas por año      ");
+        for(int i=0 ; i<añoMarcas.length ; i++){
+            listaInfoAtletasCompleta.append("\n                     ")
+                                    .append(añoMarcas[i]).append("  :  ")
+                                    .append(marcas[cantidadAtletasGuardados-1][i]);
+        }
+        
+    }
+    
+    
+    public static void mostrarAtletas(){
+    
+        System.out.println("\n-----------------------------------------");
+        System.out.println("-----------------------------------------");
+        System.out.println("\n    Lista de atletas registrados  ");
+        System.out.println(listaInfoAtletasCompleta);
+        System.out.println("-----------------------------------------");
         System.out.println("-----------------------------------------\n");
     }
+    
+    
     
     
     
@@ -176,6 +214,7 @@ public class Boletin5Ejercicio11 {
                     break;
                 
                 case 2:
+                    mostrarAtletas();
                     break;
                 
                 case 3:
