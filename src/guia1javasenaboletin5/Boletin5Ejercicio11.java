@@ -29,13 +29,44 @@ public class Boletin5Ejercicio11 {
     */
     
     
+    private static int cantidadAtletas;
+    private static String[] nombreAtleta;
+    private static int[] numeroDorsal;
+    
+    private static int[][] marcas;
+    private static String[] añoMarcas;
+    
+    private static int cantidadAtletasGuardados;
+    private static int limiteNumDorsal;
+    
+    public static void inicializarVariables( int numAtletas, String[] listaAñoMarcas, int defNumLimDorsal ){
+        
+        cantidadAtletas = numAtletas;
+        nombreAtleta = new String[cantidadAtletas];
+        numeroDorsal = new int[cantidadAtletas];
+        
+        marcas = new int[cantidadAtletas][listaAñoMarcas.length];
+        añoMarcas = listaAñoMarcas;
+        /*La posiciones de las mejores marcas se manejaran asi:
+            indice 0 = mejor marca del año listaAñoMarcas[0]
+            indice 1 = mejor marca del año listaAñoMarcas[1]
+            indice 2 = mejor marca del año listaAñoMarcas[2]
+        */
+        
+        cantidadAtletasGuardados = 0;
+        limiteNumDorsal = defNumLimDorsal; 
+        
+    }
+    
+    
+    
     //Variables y funcion para estructurar el menu de opciones
-    public static String[] menu;
-    public static StringBuilder concatenarMenu = new StringBuilder();
+    public static String armarStringMenu(){
     
-    public static void armarStringMenu(){
-    
-         menu = new String[]{
+        String[] menu;
+        StringBuilder concatenarMenu = new StringBuilder();
+        
+        menu = new String[]{
             "Inscribir un participante.",
             "Mostrar listado de datos.",
             "Mostrar listado por marcas.",
@@ -46,71 +77,102 @@ public class Boletin5Ejercicio11 {
         for( int i=0; i< menu.length; i++){
             concatenarMenu.append(i+1).append(".-").append(menu[i]).append("\n");
         }
+        
+        return concatenarMenu.toString();
   
     }
     //Fin de Variables y funcion para estructurar el menu de opciones
    
     
-    public static void solucion(){
+    public static void agregarAtleta(){
+    
+        if(hayCupoDisponible()){
+            
+            System.out.printf("%nA continuacion va escribir la informacion del atleta #%d %n", cantidadAtletasGuardados + 1 );
+            
+            nombreAtleta[cantidadAtletasGuardados] = capturarNombre();
 
-        armarStringMenu();
+            numeroDorsal[cantidadAtletasGuardados] = capturarNumeroDorsal();
+            
+            capturarMarcas();
+
+            cantidadAtletasGuardados++;
+
+        }else{
+            System.out.printf("Ha llegado al limite de %d atletas \n", cantidadAtletas);
+        }
+    
+    }
+    
+    public static boolean hayCupoDisponible(){
+        return cantidadAtletasGuardados < cantidadAtletas;
+    }
+    
+    public static String capturarNombre(){
+        System.out.printf("Nombre del atleta : ");
+        return Entrada.texto();
+    }
+    
+    public static int capturarNumeroDorsal(){
+        int numero;
+        while (true){
+            System.out.printf("%nEscribe el NUMERO del atleta\n");
+            System.out.printf("Recuerda debe estar en un rango de 1 hasta %d\n", limiteNumDorsal);
+            numero = Entrada.entero();
+
+            if(numero > limiteNumDorsal ){
+                mostrarError("Valor por encima del permitido");
+            }else{
+                boolean isNumRepetido = false;
+                for(int num: numeroDorsal){
+                    if(numero == num){
+                        isNumRepetido = true;
+                        break;
+                    }
+                }
+                
+                if(isNumRepetido) mostrarError("Numero Dorsal repetido, verifica y escribelo nuevamente");
+                else return numero;           
+            } 
+            
+        }
+    }
+    
+    public static void capturarMarcas(){
+        System.out.println("");
+        for(int i=0 ; i<añoMarcas.length ; i++){
+            System.out.printf("Mejor marca del año %s en cm :",añoMarcas[i]);
+            marcas[cantidadAtletasGuardados][i] = Entrada.entero(false, false, true);
+        }
+    }
+    
+    public static void mostrarError(String error) {
+        System.out.println("\n-----------------------------------------");
+        System.out.println("Error: "+ error);
+        System.out.println("-----------------------------------------\n");
+    }
+    
+    
+    
+    public static void solucion(){
         
-        int cantidadAtletas = 10;
-        int cantidadAtletasGuardados = 0;
-        int cantMarcas = 3;
-        String[] nombreAtleta = new String[cantidadAtletas];
-        int[] numeroDorsal = new int[cantidadAtletas];
-        int limiteNumDorsal = 9999;
-        int[][] marcas = new int[cantidadAtletas][cantMarcas];
-        /*La posiciones de las mejores marcas se manejaran asi:
-            indice 0 = mejor marca del año 2002
-            indice 1 = mejor marca del año 2001
-            indice 2 = mejor marca del año 2000
-        */
-        String[] añoMarcas = new String[]{"2002","2001","2000"};
+
+        String  mensajeMenu = armarStringMenu();
+        
+        inicializarVariables(10, new String[]{"2002","2001","2000"}, 9999);
         
         
         int opcion=0;
         while(opcion !=4){
             
-            System.out.println(concatenarMenu);
+            System.out.println(mensajeMenu);
             System.out.print("Escriba la opcion que desea realizar : ");
             opcion = Entrada.entero(false, false, true);
             
             switch(opcion){
                 
                 case 1:
-                    if(cantidadAtletasGuardados < cantidadAtletas){
-                        System.out.printf("%nA continuacion va escribir la informacion del atleta #%d %n", cantidadAtletasGuardados + 1 );
-                        System.out.printf("Nombre del atleta : ");
-                        nombreAtleta[cantidadAtletasGuardados] = Entrada.texto();
- 
-                        while (true){
-                            System.out.printf("%nEscribe el NUMERO del atleta\n");
-                            System.out.printf("Recuerda debe estar en un rango de 1 hasta %d\n", limiteNumDorsal);
-                            numeroDorsal[cantidadAtletasGuardados] = Entrada.entero();
-
-                            if(numeroDorsal[cantidadAtletasGuardados] > limiteNumDorsal){
-                                mostrarError("Valor por encima del permitido");
-                            }else{
-                                break;
-                            }                             
-                        }
-                        
-                        System.out.println("");
-                        for(int i=0 ; i<cantMarcas ; i++){
-                                                           
-                            System.out.printf("Mejor marca del año %s en cm :",añoMarcas[i]);
-                            marcas[cantidadAtletasGuardados][i] = Entrada.entero(false, false, true);
-
-                        }
-                        
-                        cantidadAtletasGuardados++;
-                        
-                    }else{
-                        System.out.printf("Ha llegado al limite de %d atletas \n", cantidadAtletas);
-                    }
-                    
+                    agregarAtleta();
                     break;
                 
                 case 2:
@@ -135,9 +197,5 @@ public class Boletin5Ejercicio11 {
     
     }
     
-    public static void mostrarError(String error) {
-        System.out.println("\n-----------------------------------------");
-        System.out.println("Error: "+ error);
-        System.out.println("-----------------------------------------\n");
-    }
+
 }
